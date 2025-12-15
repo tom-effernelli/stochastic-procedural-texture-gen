@@ -10,7 +10,7 @@ GAUSSIAN_STD = 1/36
 # Computing T transformation
 # input is an np.array object
 def Tinput(input):
-    Tinput = Image.new('RGB', (len(input[0]), len(input))) # Creating new Image that will have gaussian histogram
+    t_input = np.zeros(input.shape, dtype=np.float32)
 
     sortedInputValues = []
     for y in range(len(input)):
@@ -22,7 +22,7 @@ def Tinput(input):
         x, y, _ = sortedInputValues[i]
         U = (i + 0.5)/len(sortedInputValues)
         G = stats.norm.ppf(U, loc=GAUSSIAN_AVERAGE, scale=GAUSSIAN_STD)
-
+        t_input[y][x] = G
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
