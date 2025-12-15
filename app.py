@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # Computing T transformation
 # input is an np.array object
 def Tinput(input):
-    Tinput = Image.new('RGB', (input.length))
+    Tinput = Image.new('RGB', (len(input[0]), len(input))) # Creating new Image that will have gaussian histogram
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
