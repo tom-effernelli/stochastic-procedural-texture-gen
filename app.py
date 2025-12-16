@@ -1,14 +1,14 @@
 import numpy as np
 import scipy.stats as stats
 from PIL import Image
-import matplotlib.pyplot as plt
 
 # Gaussian distribution parameters, see Deliot & Heitz paper for reasons of this choice
 GAUSSIAN_AVERAGE = 0.5
 GAUSSIAN_STD = 1/36
 
 # Computing T transformation
-# input is an np.array object
+# input is an np.array object of the same size as input_texture
+# the output object is also an np.array of the same size as input_texture
 def Tinput(input):
     t_input = np.zeros(input.shape, dtype=np.float32)
 
