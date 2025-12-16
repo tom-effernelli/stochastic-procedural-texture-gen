@@ -9,7 +9,7 @@ GAUSSIAN_STD = 1/36
 # Computing T transformation
 # input is an np.array object of the same size as input_texture
 # the output object is also an np.array of the same size as input_texture
-def Tinput(input):
+def T(input):
     t_input = np.zeros(input.shape, dtype=np.float32)
 
     sortedInputValues = []
@@ -23,6 +23,11 @@ def Tinput(input):
         U = (i + 0.5)/len(sortedInputValues)
         G = stats.norm.ppf(U, loc=GAUSSIAN_AVERAGE, scale=GAUSSIAN_STD)
         t_input[y][x] = G
+    
+    return t_input
+
+def Tinv():
+
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
