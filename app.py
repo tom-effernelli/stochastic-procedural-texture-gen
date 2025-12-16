@@ -36,6 +36,14 @@ def Tinv():
             sortedInputValues.append(input[y][x])
     sortedInputValues = sorted(sortedInputValues) # Sorting the list based on channel's color value
 
+    for i in range(LUT_LENGTH):
+        G = (i + 0.5)/LUT_LENGTH # Creating gaussian variable z
+        U = stats.norm.cdf(G, loc=GAUSSIAN_AVERAGE, scale=GAUSSIAN_STD)
+        index = int(np.floor(U * len(sortedInputValues)))
+        I = sortedInputValues[index]
+        LUT[i] = I
+
+    return LUT
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
