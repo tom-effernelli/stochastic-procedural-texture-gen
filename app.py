@@ -5,6 +5,7 @@ from PIL import Image
 # Gaussian distribution parameters, see Deliot & Heitz paper for reasons of this choice
 GAUSSIAN_AVERAGE = 0.5
 GAUSSIAN_STD = 1/36
+LUT_LENGTH = 256 # Look-up-table length, minimum of 256 because intensity levels are 8-bits (0 to 255) but can be more to avoid banding effect
 
 # Computing T transformation
 # input is an np.array object of the same size as input_texture
@@ -27,6 +28,13 @@ def T(input):
     return t_input
 
 def Tinv():
+    LUT = np.zeros(LUT_LENGTH)
+
+    sortedInputValues = []
+    for y in range(len(input)):
+        for x in range(len(input[0])):
+            sortedInputValues.append(input[y][x])
+    sortedInputValues = sorted(sortedInputValues) # Sorting the list based on channel's color value
 
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
