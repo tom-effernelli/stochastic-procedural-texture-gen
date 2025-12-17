@@ -27,7 +27,7 @@ def T(input):
     
     return t_input
 
-def Tinv():
+def Tinv(input):
     LUT = np.zeros(LUT_LENGTH)
 
     sortedInputValues = []
