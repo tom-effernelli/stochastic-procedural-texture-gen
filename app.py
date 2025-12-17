@@ -48,6 +48,9 @@ def Tinv(input):
 
     return LUT
 
+def TilingBlending(uv):
+    
+
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
 input = np.array(input_texture)
