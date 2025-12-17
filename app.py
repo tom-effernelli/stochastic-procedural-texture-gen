@@ -48,8 +48,15 @@ def Tinv(input):
 
     return LUT
 
-def TilingBlending(uv):
-    
+def Tiling(uv):
+    uv *= 3.464 # Factor 2*sqrt(3) for proper hexagonal tiling resizing
+
+    gridToSkewedGrid = np.matrix([[1, -0.57735027], [0, 1.15470054]])
+    skewedCoord = np.matmul(gridToSkewedGrid, uv)
+    baseId = np.floor(skewedCoord)
+    temp, _ = np.modf(skewedCoord)
+    temp = temp.append(temp, 0)
+
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
