@@ -8,7 +8,7 @@ GAUSSIAN_STD = 1/36
 LUT_LENGTH = 256 # Look-up-table length, minimum of 256 because intensity levels are 8-bits (0 to 255) but can be more to avoid banding effect
 
 # Computing T transformation
-# input is an np.array object of the same size as input_texture
+# input is an np.array object of the same size as input_texture (typically R/G/B channel of input_texture)
 # the output object is also an np.array of the same size as input_texture
 def T(input):
     t_input = np.zeros(input.shape, dtype=np.float32)
@@ -27,6 +27,9 @@ def T(input):
     
     return t_input
 
+# Computing the inverse of T transformation
+# input is an np.array object of the same size as input_texture (typically R/G/B channel of input_texture)
+# the output object is also an np.array of size (LUT_LENGTH, 1)
 def Tinv(input):
     LUT = np.zeros(LUT_LENGTH)
 
