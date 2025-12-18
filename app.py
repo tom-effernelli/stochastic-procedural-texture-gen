@@ -49,17 +49,27 @@ def Tinv(input):
     return LUT
 
 def Tiling(uv):
+    uv = np.array(uv, dtype=np.float32)
     uv *= 3.464 # Factor 2*sqrt(3) for proper hexagonal tiling resizing
 
-    gridToSkewedGrid = np.matrix([[1, -0.57735027], [0, 1.15470054]])
-    skewedCoord = np.matmul(gridToSkewedGrid, uv)
-    baseId = np.floor(skewedCoord)
-    temp, _ = np.modf(skewedCoord)
-    temp = temp.append(temp, 1 - temp[0] - temp[1])
-    if temp[2] > 0:
-        return temp[2], temp[1], temp[0], baseId, baseId + np.matrix([[0], [1]]), baseId + np.matrix([[1], [0]])
+    gridToSkewedGrid = np.array([[1, -0.57735027], [0, 1.15470054]])
+    skewedCoord = gridToSkewedGrid @ uv
+    baseId = np.floor(skewedCoord).astype(int)
+    temp_val = skewedCoord - np.floor(skewedCoord)
+    
+    x_frac = temp_val[0]
+    y_frac = temp_val[1]
+    z_frac = 1.0 - x_frac - y_frac
+    if z_frac > 0:
+        v1 = baseId
+        v2 = baseId + np.array([0, 1])
+        v3 = baseId + np.array([1, 0])
+        return z_frac, y_frac, x_frac, v1, v2, v3
     else:
-        return -temp[2], 1 - temp[1], 1 - temp[0], baseId + np.matrix([[1], [1]]), baseId + np.matrix([[1], [0]]), baseId + np.matrix([[0], [1]])
+        v1 = baseId + np.array([1, 1])
+        v2 = baseId + np.array([1, 0])
+        v3 = baseId + np.array([0, 1])
+        return -z_frac, 1.0 - y_frac, 1.0 - x_frac, v1, v2, v3
 
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
