@@ -6,6 +6,7 @@ from PIL import Image
 GAUSSIAN_AVERAGE = 0.5
 GAUSSIAN_STD = 1/36
 LUT_LENGTH = 256 # Look-up-table length, minimum of 256 because intensity levels are 8-bits (0 to 255) but can be more to avoid banding effect
+HASH_MATRIX = np.array([[127.1, 269.5], [311.7 , 183.3]])
 
 # Computing T transformation
 # input is an np.array object of the same size as input_texture (typically R/G/B channel of input_texture)
@@ -72,6 +73,10 @@ def Tiling(uv):
         v2 = baseId + np.array([1, 0])
         v3 = baseId + np.array([0, 1])
         return -z_frac, 1.0 - y_frac, 1.0 - x_frac, v1, v2, v3
+
+def hash(p):
+    h = np.sin(p @ HASH_MATRIX) * 43758.5453
+    return h - np.floor(h)
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
