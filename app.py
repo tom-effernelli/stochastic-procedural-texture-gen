@@ -48,6 +48,8 @@ def Tinv(input):
 
     return LUT
 
+# Takes uv 2-dimensionnal vector as input (coordinates on the 3D to-be-textured-surface)
+# Returns w1, w2, w3, vertex1, vertex2, vertex3 (wi are the barycentric coordinates, vertexes are the triangles ends)
 def Tiling(uv):
     uv = np.array(uv, dtype=np.float32)
     uv *= 3.464 # Factor 2*sqrt(3) for proper hexagonal tiling resizing
@@ -70,7 +72,6 @@ def Tiling(uv):
         v2 = baseId + np.array([1, 0])
         v3 = baseId + np.array([0, 1])
         return -z_frac, 1.0 - y_frac, 1.0 - x_frac, v1, v2, v3
-
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
