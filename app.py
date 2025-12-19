@@ -4,7 +4,7 @@ from PIL import Image
 
 # Gaussian distribution parameters, see Deliot & Heitz paper for reasons of this choice
 GAUSSIAN_AVERAGE = 0.5
-GAUSSIAN_STD = 1/36
+GAUSSIAN_STD = 1/6
 LUT_LENGTH = 256 # Look-up-table length, minimum of 256 because intensity levels are 8-bits (0 to 255) but can be more to avoid banding effect
 HASH_MATRIX = np.array([[127.1, 269.5], [311.7 , 183.3]])
 
@@ -105,4 +105,4 @@ for c in range(3):
             G = w1*G1 + w2*G2 + w3*G3
             G = G - 0.5
             G = G/(w1**2 + w2**2 + w3**2)
-            
+            G = G + 0.5
