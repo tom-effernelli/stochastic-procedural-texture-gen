@@ -90,9 +90,19 @@ output_channels = [output[:, :, i] for i in range(3)]
 for c in range(3):
     for y in range(len(output)):
         for x in range(len(output[0])):
-            uv = np.array([[x/len(output[0])], [y/len(output)]])
+            uv = np.array([[x/(len(output[0])-1)], [y/(len(output)-1)]])
             w1, w2, w3, vertex1, vertex2, vertex3 = Tiling(uv)
 
             uv1 = (uv + hash(vertex1))%1
             uv2 = (uv + hash(vertex2))%1
             uv3 = (uv + hash(vertex3))%1
+
+            t_input = T(input_channels[c])
+            G1 = t_input[np.floor(uv1[1]*len(t_input))][np.floor(uv1[0]*len(t_input[0]))]
+            G2 = t_input[np.floor(uv2[1]*len(t_input))][np.floor(uv2[0]*len(t_input[0]))]
+            G3 = t_input[np.floor(uv3[1]*len(t_input))][np.floor(uv3[0]*len(t_input[0]))]
+
+            G = w1*G1 + w2*G2 + w3*G3
+            G = G - 0.5
+            G = G/(w1**2 + w2**2 + w3**2)
+            
