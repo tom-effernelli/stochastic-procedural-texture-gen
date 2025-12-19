@@ -81,7 +81,18 @@ def hash(p):
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
 input = np.array(input_texture)
-channels = [input[:, :, i] for i in range(3)]
+input_channels = [input[:, :, i] for i in range(3)]
+output_img = Image.new('RGB', (input_texture.size[0]*4, input_texture.size[1]*4))
+output = np.array(output_img)
+output_channels = [output[:, :, i] for i in range(3)]
 
 # From now we are working on each channel independantly
-for c in channels:
+for c in range(3):
+    for y in range(len(output)):
+        for x in range(len(output[0])):
+            uv = np.array([[x/len(output[0])], [y/len(output)]])
+            w1, w2, w3, vertex1, vertex2, vertex3 = Tiling(uv)
+
+            uv1 = (uv + hash(vertex1))%1
+            uv2 = (uv + hash(vertex2))%1
+            uv3 = (uv + hash(vertex3))%1
