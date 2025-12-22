@@ -98,9 +98,9 @@ for c in range(3):
             uv2 = (uv + hash(vertex2))%1
             uv3 = (uv + hash(vertex3))%1
             
-            G1 = t_inputs[c][np.floor(uv1[1]*(len(t_inputs[c])-1))][np.floor(uv1[0]*(len(t_inputs[c][0])-1))]
-            G2 = t_inputs[c][np.floor(uv2[1]*(len(t_inputs[c])-1))][np.floor(uv2[0]*(len(t_inputs[c][0])-1))]
-            G3 = t_inputs[c][np.floor(uv3[1]*(len(t_inputs[c])-1))][np.floor(uv3[0]*(len(t_inputs[c][0])-1))]
+            G1 = t_inputs[c][int(np.floor(uv1[1]*(len(t_inputs[c])-1)))][int(np.floor(uv1[0]*(len(t_inputs[c][0])-1)))]
+            G2 = t_inputs[c][int(np.floor(uv2[1]*(len(t_inputs[c])-1)))][int(np.floor(uv2[0]*(len(t_inputs[c][0])-1)))]
+            G3 = t_inputs[c][int(np.floor(uv3[1]*(len(t_inputs[c])-1)))][int(np.floor(uv3[0]*(len(t_inputs[c][0])-1)))]
 
             G = w1*G1 + w2*G2 + w3*G3
             G = G - 0.5
