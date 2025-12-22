@@ -58,7 +58,7 @@ def Tiling(uv):
     gridToSkewedGrid = np.array([[1, -0.57735027], [0, 1.15470054]])
     skewedCoord = gridToSkewedGrid @ uv
     baseId = np.floor(skewedCoord).astype(int)
-    temp_val = skewedCoord - np.floor(skewedCoord)
+    temp_val = (skewedCoord - np.floor(skewedCoord)).flatten()
     
     x_frac = temp_val[0]
     y_frac = temp_val[1]
@@ -75,8 +75,10 @@ def Tiling(uv):
         return -z_frac, 1.0 - y_frac, 1.0 - x_frac, v1, v2, v3
 
 def hash(p):
-    h = np.sin(p.flatten() @ HASH_MATRIX) * 43758.5453
-    return np.resize(h - np.floor(h), (2,1))
+    p_flat = np.array(p).flatten()
+    h = np.sin(p_flat @ HASH_MATRIX) * 43758.5453
+    h_frac = h - np.floor(h)
+    return h_frac.reshape(2, 1)
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
@@ -89,20 +91,43 @@ output_channels = [output[:, :, i] for i in range(3)]
 
 # From now we are working on each channel independantly
 for c in range(3):
+    # Compute the inverse transformation LUT once per channel
+    LUT = Tinv(t_inputs[c])
+    
     for y in range(len(output)):
         for x in range(len(output[0])):
             uv = np.array([[x/(len(output[0])-1)], [y/(len(output)-1)]])
             w1, w2, w3, vertex1, vertex2, vertex3 = Tiling(uv)
 
-            uv1 = (uv + hash(vertex1))%1
-            uv2 = (uv + hash(vertex2))%1
-            uv3 = (uv + hash(vertex3))%1
+            uv1 = (uv + hash(vertex1)) % 1
+            uv2 = (uv + hash(vertex2)) % 1
+            uv3 = (uv + hash(vertex3)) % 1
             
-            G1 = t_inputs[c][int(np.floor(uv1[1]*(len(t_inputs[c])-1)))][int(np.floor(uv1[0]*(len(t_inputs[c][0])-1)))]
-            G2 = t_inputs[c][int(np.floor(uv2[1]*(len(t_inputs[c])-1)))][int(np.floor(uv2[0]*(len(t_inputs[c][0])-1)))]
-            G3 = t_inputs[c][int(np.floor(uv3[1]*(len(t_inputs[c])-1)))][int(np.floor(uv3[0]*(len(t_inputs[c][0])-1)))]
+            G1 = t_inputs[c][int(np.floor(uv1[1,0]*(len(t_inputs[c])-1)))][int(np.floor(uv1[0,0]*(len(t_inputs[c][0])-1)))]
+            G2 = t_inputs[c][int(np.floor(uv2[1,0]*(len(t_inputs[c])-1)))][int(np.floor(uv2[0,0]*(len(t_inputs[c][0])-1)))]
+            G3 = t_inputs[c][int(np.floor(uv3[1,0]*(len(t_inputs[c])-1)))][int(np.floor(uv3[0,0]*(len(t_inputs[c][0])-1)))]
 
+            # Blend the Gaussian values using barycentric weights
             G = w1*G1 + w2*G2 + w3*G3
             G = G - 0.5
             G = G/np.sqrt((w1**2 + w2**2 + w3**2))
             G = G + 0.5
+            
+            # Convert back from Gaussian space to intensity space using the LUT
+            # Compute the CDF of G to get the quantile
+            U = stats.norm.cdf(G, loc=GAUSSIAN_AVERAGE, scale=GAUSSIAN_STD)
+            # Map quantile to LUT index
+            lut_index = int(np.clip(U * LUT_LENGTH, 0, LUT_LENGTH - 1))
+            # Get the final intensity value
+            intensity = LUT[lut_index]
+            # Store in output channel
+            output_channels[c][y][x] = np.clip(intensity, 0, 255).astype(np.uint8)
+
+# Reconstruct the output image from channels
+for c in range(3):
+    output[:, :, c] = output_channels[c]
+
+# Save the output image
+output_img = Image.fromarray(output)
+output_img.save("output.jpg")
+print("Texture generation complete! Output saved as 'output.jpg'")
