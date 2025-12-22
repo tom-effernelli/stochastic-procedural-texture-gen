@@ -75,7 +75,7 @@ def Tiling(uv):
         return -z_frac, 1.0 - y_frac, 1.0 - x_frac, v1, v2, v3
 
 def hash(p):
-    h = np.sin(p @ HASH_MATRIX) * 43758.5453
+    h = np.sin(p.flatten() @ HASH_MATRIX) * 43758.5453
     return h - np.floor(h)
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
@@ -97,7 +97,6 @@ for c in range(3):
             uv1 = (uv + hash(vertex1))%1
             uv2 = (uv + hash(vertex2))%1
             uv3 = (uv + hash(vertex3))%1
-
             
             G1 = t_inputs[c][np.floor(uv1[1]*(len(t_inputs[c])-1))][np.floor(uv1[0]*(len(t_inputs[c][0])-1))]
             G2 = t_inputs[c][np.floor(uv2[1]*(len(t_inputs[c])-1))][np.floor(uv2[0]*(len(t_inputs[c][0])-1))]
