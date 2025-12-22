@@ -76,7 +76,7 @@ def Tiling(uv):
 
 def hash(p):
     h = np.sin(p.flatten() @ HASH_MATRIX) * 43758.5453
-    return h - np.floor(h)
+    return np.resize(h - np.floor(h), (2,1))
 
 # Texture file must be named after 'texture.jpg' and must thus be a JPEG format
 input_texture = Image.open("texture.jpg").convert('RGB')
