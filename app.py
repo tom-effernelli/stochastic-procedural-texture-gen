@@ -7,6 +7,7 @@ GAUSSIAN_AVERAGE = 0.5
 GAUSSIAN_STD = 1/6
 LUT_LENGTH = 256 # Look-up-table length, minimum of 256 because intensity levels are 8-bits (0 to 255) but can be more to avoid banding effect
 HASH_MATRIX = np.array([[127.1, 269.5], [311.7 , 183.3]])
+OUTPUT_SCALE_FACTOR = 2
 
 # Computing T transformation
 # input is an np.array object of the same size as input_texture (typically R/G/B channel of input_texture)
@@ -84,9 +85,11 @@ def hash(p):
 input_texture = Image.open("texture.jpg").convert('RGB')
 input = np.array(input_texture)
 input_channels = [input[:, :, i] for i in range(3)]
+
 t_inputs = [T(ic) for ic in input_channels]
 LUTs = [Tinv(t_inputs[c]) for c in range(3)]
-output_img = Image.new('RGB', (input_texture.size[0]*2, input_texture.size[1]*2))
+
+output_img = Image.new('RGB', (input_texture.size[0]*OUTPUT_SCALE_FACTOR, input_texture.size[1]*OUTPUT_SCALE_FACTOR))
 output = np.array(output_img)
 output_channels = [output[:, :, i] for i in range(3)]
 
