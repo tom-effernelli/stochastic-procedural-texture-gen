@@ -130,4 +130,3 @@ for c in range(3):
 # Save the output image
 output_img = Image.fromarray(output)
 output_img.save("output.jpg")
-print("Texture generation complete! Output saved as 'output.jpg'")
