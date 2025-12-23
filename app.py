@@ -87,7 +87,7 @@ input = np.array(input_texture)
 input_channels = [input[:, :, i] for i in range(3)]
 
 t_inputs = [T(ic) for ic in input_channels]
-LUTs = [Tinv(t_inputs[c]) for c in range(3)]
+LUTs = [Tinv(ic) for ic in input_channels]
 
 output_img = Image.new('RGB', (input_texture.size[0]*OUTPUT_SCALE_FACTOR, input_texture.size[1]*OUTPUT_SCALE_FACTOR))
 output = np.array(output_img)
