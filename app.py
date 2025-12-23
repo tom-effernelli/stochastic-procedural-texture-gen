@@ -85,15 +85,13 @@ input_texture = Image.open("texture.jpg").convert('RGB')
 input = np.array(input_texture)
 input_channels = [input[:, :, i] for i in range(3)]
 t_inputs = [T(ic) for ic in input_channels]
+LUTs = [Tinv(t_inputs[c]) for c in range(3)]
 output_img = Image.new('RGB', (input_texture.size[0]*2, input_texture.size[1]*2))
 output = np.array(output_img)
 output_channels = [output[:, :, i] for i in range(3)]
 
 # From now we are working on each channel independantly
 for c in range(3):
-    # Compute the inverse transformation LUT once per channel
-    LUT = Tinv(t_inputs[c])
-    
     for y in range(len(output)):
         for x in range(len(output[0])):
             uv = np.array([[x/(len(output[0])-1)], [y/(len(output)-1)]])
@@ -119,7 +117,7 @@ for c in range(3):
             # Map quantile to LUT index
             lut_index = int(np.clip(U * LUT_LENGTH, 0, LUT_LENGTH - 1))
             # Get the final intensity value
-            intensity = LUT[lut_index]
+            intensity = LUTs[c][lut_index]
             # Store in output channel
             output_channels[c][y][x] = np.clip(intensity, 0, 255).astype(np.uint8)
 
