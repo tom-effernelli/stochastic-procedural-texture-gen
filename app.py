@@ -66,13 +66,13 @@ def Tiling(uv):
     z_frac = 1.0 - x_frac - y_frac
     if z_frac > 0:
         v1 = baseId
-        v2 = baseId + np.array([0, 1])
-        v3 = baseId + np.array([1, 0])
+        v2 = baseId + np.array([[0], [1]])
+        v3 = baseId + np.array([[1], [0]])
         return z_frac, y_frac, x_frac, v1, v2, v3
     else:
-        v1 = baseId + np.array([1, 1])
-        v2 = baseId + np.array([1, 0])
-        v3 = baseId + np.array([0, 1])
+        v1 = baseId + np.array([[1], [1]])
+        v2 = baseId + np.array([[1], [0]])
+        v3 = baseId + np.array([[0], [1]])
         return -z_frac, 1.0 - y_frac, 1.0 - x_frac, v1, v2, v3
 
 def hash(p):
@@ -114,11 +114,7 @@ for c in range(3):
             G = G/np.sqrt((w1**2 + w2**2 + w3**2))
             G = G + 0.5
             
-            # Convert back from Gaussian space to intensity space using the LUT
-            # Compute the CDF of G to get the quantile
-            U = stats.norm.cdf(G, loc=GAUSSIAN_AVERAGE, scale=GAUSSIAN_STD)
-            # Map quantile to LUT index
-            lut_index = int(np.clip(U * LUT_LENGTH, 0, LUT_LENGTH - 1))
+            lut_index = int(np.clip(G * LUT_LENGTH, 0, LUT_LENGTH - 1))
             # Get the final intensity value
             intensity = LUTs[c][lut_index]
             # Store in output channel
