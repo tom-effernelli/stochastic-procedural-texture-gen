@@ -1,19 +1,111 @@
 # Stochastic Procedural Texture Generation
 
-Implémentation d'un algorithme de génération procédurale stochastique de textures basé sur la méthode décrite dans le papier de Deliot & Heitz. Cet algorithme permet de générer des textures procédurales à partir d'une texture d'entrée en utilisant un pavage hexagonal et des transformations statistiques.
+Implementation of a stochastic procedural texture generation algorithm based on the method described in the Deliot & Heitz paper. This algorithm generates procedural textures from an input texture using hexagonal tiling and statistical transformations.
 
 ## Description
 
-Ce projet implémente une méthode de génération de textures procédurales qui transforme une texture d'entrée en une texture de sortie plus grande en utilisant :
+This project implements a procedural texture generation method that transforms an input texture into a larger output texture using:
 
-- Une transformation statistique basée sur une distribution gaussienne
-- Un pavage hexagonal pour la génération procédurale
-- Une fonction de hachage pour le bruit stochastique
-- Une interpolation barycentrique pour le mélange des valeurs
+- A statistical transformation based on a Gaussian distribution
+- Hexagonal tiling for procedural generation
+- A hash function for stochastic noise
+- Barycentric interpolation for value blending
 
-L'algorithme génère une texture de sortie deux fois plus grande que la texture d'entrée en préservant les caractéristiques statistiques de l'image originale.
+The algorithm generates an output texture that is twice the size of the input texture while preserving the statistical characteristics of the original image.
 
-## Prérequis
+## Examples
+
+The following examples show input textures alongside their procedurally generated extended versions:
+
+<div align="center">
+
+### Example 1
+<table>
+<tr>
+<td align="center"><b>Input Texture</b></td>
+<td align="center"><b>Generated Output (2x scale)</b></td>
+</tr>
+<tr>
+<td><img src="results/texture-1.jpg" width="300"/></td>
+<td><img src="results/output-1.jpg" width="300"/></td>
+</tr>
+</table>
+
+### Example 2
+<table>
+<tr>
+<td align="center"><b>Input Texture</b></td>
+<td align="center"><b>Generated Output (2x scale)</b></td>
+</tr>
+<tr>
+<td><img src="results/texture-2.jpg" width="300"/></td>
+<td><img src="results/output-2.jpg" width="300"/></td>
+</tr>
+</table>
+
+### Example 3
+<table>
+<tr>
+<td align="center"><b>Input Texture</b></td>
+<td align="center"><b>Generated Output (2x scale)</b></td>
+</tr>
+<tr>
+<td><img src="results/texture-3.jpg" width="300"/></td>
+<td><img src="results/output-3.jpg" width="300"/></td>
+</tr>
+</table>
+
+### Example 4
+<table>
+<tr>
+<td align="center"><b>Input Texture</b></td>
+<td align="center"><b>Generated Output (2x scale)</b></td>
+</tr>
+<tr>
+<td><img src="results/texture-4.jpg" width="300"/></td>
+<td><img src="results/output-4.jpg" width="300"/></td>
+</tr>
+</table>
+
+### Example 5
+<table>
+<tr>
+<td align="center"><b>Input Texture</b></td>
+<td align="center"><b>Generated Output (2x scale)</b></td>
+</tr>
+<tr>
+<td><img src="results/texture-5.jpg" width="300"/></td>
+<td><img src="results/output-5.jpg" width="300"/></td>
+</tr>
+</table>
+
+### Example 6
+<table>
+<tr>
+<td align="center"><b>Input Texture</b></td>
+<td align="center"><b>Generated Output (2x scale)</b></td>
+</tr>
+<tr>
+<td><img src="results/texture-6.jpg" width="300"/></td>
+<td><img src="results/output-6.jpg" width="300"/></td>
+</tr>
+</table>
+
+### Example 7
+<table>
+<tr>
+<td align="center"><b>Input Texture</b></td>
+<td align="center"><b>Generated Output (2x scale)</b></td>
+</tr>
+<tr>
+<td><img src="results/texture-7.jpg" width="300"/></td>
+<td><img src="results/output-7.jpg" width="300"/></td>
+</tr>
+</table>
+
+</div>
+
+## Prerequisites
 
 - Python 3.x
 - NumPy
@@ -22,13 +114,13 @@ L'algorithme génère une texture de sortie deux fois plus grande que la texture
 
 ## Installation
 
-Installez les dépendances nécessaires :
+Install the required dependencies:
 
 ```bash
 pip install numpy scipy pillow
 ```
 
-Ou créez un fichier `requirements.txt` avec le contenu suivant :
+Or create a `requirements.txt` file with the following content:
 
 ```
 numpy
@@ -36,71 +128,70 @@ scipy
 pillow
 ```
 
-Puis installez avec :
+Then install with:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Utilisation
+## Usage
 
-1. Placez votre texture d'entrée dans le répertoire du projet et nommez-la `texture.jpg`
+1. Place your input texture in the project directory and name it `texture.jpg`
 
-2. Exécutez le script :
+2. Run the script:
 
 ```bash
 python app.py
 ```
 
-3. La texture générée sera sauvegardée sous le nom `output.jpg` dans le même répertoire
+3. The generated texture will be saved as `output.jpg` in the same directory
 
-## Paramètres
+## Parameters
 
-Le script contient plusieurs paramètres configurables en haut du fichier `app.py` :
+The script contains several configurable parameters at the top of the `app.py` file:
 
-- `GAUSSIAN_AVERAGE` : Moyenne de la distribution gaussienne (par défaut : 0.5)
-- `GAUSSIAN_STD` : Écart-type de la distribution gaussienne (par défaut : 1/6)
-- `LUT_LENGTH` : Longueur de la table de correspondance (par défaut : 256)
-- `OUTPUT_SCALE_FACTOR` : Facteur d'échelle de la texture de sortie (par défaut : 2)
+- `GAUSSIAN_AVERAGE`: Mean of the Gaussian distribution (default: 0.5)
+- `GAUSSIAN_STD`: Standard deviation of the Gaussian distribution (default: 1/6)
+- `LUT_LENGTH`: Length of the lookup table (default: 256)
+- `OUTPUT_SCALE_FACTOR`: Scale factor for the output texture (default: 2)
 
-## Fonctionnement
+## How It Works
 
-L'algorithme fonctionne en plusieurs étapes :
+The algorithm works in several steps:
 
-1. **Transformation T** : Convertit les valeurs de pixels de chaque canal (R, G, B) en valeurs suivant une distribution gaussienne en triant les pixels par intensité et en les mappant à des quantiles gaussiens.
+1. **T Transformation**: Converts pixel values from each channel (R, G, B) to values following a Gaussian distribution by sorting pixels by intensity and mapping them to Gaussian quantiles.
 
-2. **Transformation inverse Tinv** : Crée une table de correspondance (LUT) qui permet de convertir les valeurs gaussiennes en valeurs d'intensité d'origine.
+2. **Inverse T Transformation (Tinv)**: Creates a lookup table (LUT) that converts Gaussian values back to original intensity values.
 
-3. **Pavage hexagonal** : Utilise un pavage hexagonal pour déterminer les coordonnées barycentriques et les sommets des triangles pour chaque pixel de sortie.
+3. **Hexagonal Tiling**: Uses hexagonal tiling to determine barycentric coordinates and triangle vertices for each output pixel.
 
-4. **Fonction de hachage** : Génère des valeurs stochastiques à partir des coordonnées des sommets pour créer de la variation dans la texture.
+4. **Hash Function**: Generates stochastic values from vertex coordinates to create variation in the texture.
 
-5. **Interpolation et reconstruction** : Mélange les valeurs gaussiennes des trois sommets en utilisant les poids barycentriques, puis convertit le résultat en valeur d'intensité finale via la LUT.
+5. **Interpolation and Reconstruction**: Blends Gaussian values from the three vertices using barycentric weights, then converts the result to final intensity value via the LUT.
 
-## Structure du projet
+## Project Structure
 
 ```
 stochastic-procedural-texture-gen/
-├── app.py                 # Script principal
-├── texture.jpg            # Texture d'entrée (à fournir)
-├── output.jpg             # Texture de sortie (générée)
-└── results/               # Dossier contenant des exemples de résultats
-    ├── texture-*.jpg      # Textures d'entrée d'exemple
-    └── output-*.jpg       # Textures de sortie correspondantes
+├── app.py                 # Main script
+├── texture.jpg            # Input texture (to be provided)
+├── output.jpg             # Output texture (generated)
+└── results/               # Folder containing example results
+    ├── texture-*.jpg      # Example input textures
+    └── output-*.jpg       # Corresponding output textures
 ```
 
-## Notes techniques
+## Technical Notes
 
-- La texture d'entrée doit être au format JPEG et nommée `texture.jpg`
-- La texture de sortie est générée avec un facteur d'échelle de 2 (largeur et hauteur doublées)
-- L'algorithme traite chaque canal de couleur (R, G, B) indépendamment
-- La longueur minimale de la LUT est de 256 pour correspondre aux niveaux d'intensité 8 bits (0-255)
+- The input texture must be in JPEG format and named `texture.jpg`
+- The output texture is generated with a scale factor of 2 (width and height doubled)
+- The algorithm processes each color channel (R, G, B) independently
+- The minimum LUT length is 256 to match 8-bit intensity levels (0-255)
 
-## Références
+## References
 
-Cet algorithme est basé sur les travaux de Deliot & Heitz concernant la génération procédurale stochastique de textures.
+This algorithm is based on the work of Deliot & Heitz on stochastic procedural texture generation.
 
-## Licence
+## License
 
-Ce projet est fourni tel quel, sans garantie d'aucune sorte.
-
+This project is provided as-is, without any warranty.
