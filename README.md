@@ -79,6 +79,8 @@ The following examples show input textures alongside their procedurally generate
 </tr>
 </table>
 
+*Note: This example demonstrates a limitation of the algorithm. The input texture contains strong geometric patterns (lines/grids), which the algorithm struggles to preserve. The method relies on global statistical properties rather than local spatial structure, and the hexagonal tiling with barycentric interpolation can introduce artifacts that break the geometric alignment of structured patterns.*
+
 ### Example 6
 <table>
 <tr>
@@ -91,6 +93,8 @@ The following examples show input textures alongside their procedurally generate
 </tr>
 </table>
 
+*Note: Similar to Example 5, this texture features pronounced geometric patterns. The algorithm's statistical approach preserves intensity distributions but cannot maintain the precise spatial relationships required for regular geometric structures. The stochastic hash-based sampling and hexagonal tiling introduce randomness that disrupts the original pattern's continuity.*
+
 ### Example 7
 <table>
 <tr>
@@ -102,6 +106,8 @@ The following examples show input textures alongside their procedurally generate
 <td><img src="results/output-7.jpg" width="300"/></td>
 </tr>
 </table>
+
+*Note: This example also shows the algorithm's limitations with highly structured textures. When input textures contain strong directional patterns or regular geometric shapes, the method's reliance on statistical transformations and stochastic interpolation fails to capture the spatial coherence. The algorithm works best with stochastic or organic textures where global statistics are more important than exact spatial structure.*
 
 </div>
 
